@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.cryptic_cat.exception.InvalidUsernameOrPasswordException;
 import com.cryptic_cat.payload.request.LoginRequest;
 import com.cryptic_cat.security.JwtTokenProvider;
 import com.cryptic_cat.service.AuthService;
@@ -28,15 +29,19 @@ public class AuthServiceImpl implements AuthService {
 		this.userService = userService;
 	}
 
-	public String authenticateAndGenerateToken(LoginRequest loginRequest) throws UsernameNotFoundException {
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+	public String authenticateAndGenerateToken(LoginRequest loginRequest) {
+		try {
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		
-		UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUserName());
-		
-		String token = jwtTokenProvider.generateToken(userDetails);
-		return token;
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUserName());
+			
+			String token = jwtTokenProvider.generateToken(userDetails);
+			return token;
+		}catch(Exception e) {
+			throw new InvalidUsernameOrPasswordException("Invalid username or password.");
+		}
 	}
 }
