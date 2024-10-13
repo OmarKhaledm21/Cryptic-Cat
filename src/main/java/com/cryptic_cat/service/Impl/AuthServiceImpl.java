@@ -11,13 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.cryptic_cat.dao.RefreshTokenRepository;
 import com.cryptic_cat.entity.RefreshToken;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.exception.InvalidTokenException;
 import com.cryptic_cat.exception.InvalidUsernameOrPasswordException;
 import com.cryptic_cat.payload.request.LoginRequest;
 import com.cryptic_cat.payload.response.TokenResponse;
+import com.cryptic_cat.repository.RefreshTokenRepository;
 import com.cryptic_cat.security.JwtTokenProvider;
 import com.cryptic_cat.service.AuthService;
 import com.cryptic_cat.service.UserService;

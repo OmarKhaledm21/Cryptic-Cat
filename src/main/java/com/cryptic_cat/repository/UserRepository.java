@@ -1,8 +1,8 @@
-package com.cryptic_cat.dao;
+package com.cryptic_cat.repository;
 
 import com.cryptic_cat.entity.User;
 
-public interface UserDao {
+public interface UserRepository {
 
 	User findByUserName(String userName);
 

@@ -1,19 +1,19 @@
-package com.cryptic_cat.dao.impl;
+package com.cryptic_cat.repository.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.cryptic_cat.dao.RoleDao;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.enums.RoleType;
+import com.cryptic_cat.repository.RoleRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 @Repository
-public class RoleDaoImpl implements RoleDao {
+public class RoleRepositoryImpl implements RoleRepository {
 	private EntityManager entityManager;
 
-	public RoleDaoImpl(EntityManager theEntityManager) {
+	public RoleRepositoryImpl(EntityManager theEntityManager) {
 		entityManager = theEntityManager;
 	}
 

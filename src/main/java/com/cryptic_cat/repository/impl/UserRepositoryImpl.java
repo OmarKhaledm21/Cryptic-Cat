@@ -1,18 +1,18 @@
-package com.cryptic_cat.dao.impl;
+package com.cryptic_cat.repository.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.cryptic_cat.dao.UserDao;
 import com.cryptic_cat.entity.User;
+import com.cryptic_cat.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 @Repository
-public class UserDaoImpl implements UserDao {
+public class UserRepositoryImpl implements UserRepository {
 	private EntityManager entityManager;
 
-	public UserDaoImpl(EntityManager theEntityManager) {
+	public UserRepositoryImpl(EntityManager theEntityManager) {
 		this.entityManager = theEntityManager;
 	}
 

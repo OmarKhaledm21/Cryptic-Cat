@@ -1,4 +1,4 @@
-package com.cryptic_cat.dao;
+package com.cryptic_cat.repository;
 
 import java.util.List;
 

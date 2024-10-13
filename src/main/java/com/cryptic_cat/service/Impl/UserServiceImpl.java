@@ -7,14 +7,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.cryptic_cat.dao.RoleDao;
-import com.cryptic_cat.dao.UserDao;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.enums.RoleType;
 import com.cryptic_cat.exception.UserNotFoundException;
 import com.cryptic_cat.mapper.SignupRequestMapper;
 import com.cryptic_cat.payload.request.SignupRequest;
+import com.cryptic_cat.repository.RoleRepository;
+import com.cryptic_cat.repository.UserRepository;
 import com.cryptic_cat.service.UserService;
 
 import jakarta.transaction.Transactional;
@@ -22,14 +22,14 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private UserDao userDao;
+	private UserRepository userDao;
 
-	private RoleDao roleDao;
+	private RoleRepository roleDao;
 
 	private SignupRequestMapper signupRequestMapper;
 
 	@Autowired
-	public UserServiceImpl(UserDao userDao, RoleDao roleDao, SignupRequestMapper signupRequestMapper) {
+	public UserServiceImpl(UserRepository userDao, RoleRepository roleDao, SignupRequestMapper signupRequestMapper) {
 		this.userDao = userDao;
 		this.roleDao = roleDao;
 		this.signupRequestMapper = signupRequestMapper;
