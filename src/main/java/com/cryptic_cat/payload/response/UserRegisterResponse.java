@@ -9,9 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ErrorResponse {
+public class UserRegisterResponse {
 	private String message;
-	private int errorCode;
-	private LocalDateTime timestamp;
-	private String status;
+	private LocalDateTime creationTimeStamp;
 }

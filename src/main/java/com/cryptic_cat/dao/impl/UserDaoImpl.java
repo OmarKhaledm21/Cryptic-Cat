@@ -18,7 +18,8 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public User findByUserName(String theUserName) {
-		TypedQuery<User> theQuery = entityManager.createQuery("from User where userName=:uName and enabled=true", User.class);
+		TypedQuery<User> theQuery = entityManager.createQuery("from User where userName=:uName and enabled=true",
+				User.class);
 		theQuery.setParameter("uName", theUserName);
 
 		User theUser = null;
@@ -32,8 +33,9 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public void save(User user) {
-		this.entityManager.persist(user);
+	public User save(User user) {
+		User theUser = this.entityManager.merge(user);
+		return theUser;
 	}
-	
+
 }

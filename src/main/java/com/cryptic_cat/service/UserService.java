@@ -8,5 +8,5 @@ import com.cryptic_cat.payload.request.SignupRequest;
 public interface UserService extends UserDetailsService {
 	User findByUserName(String userName);
 
-	void save(SignupRequest signupRequest);
+	User save(SignupRequest signupRequest);
 }

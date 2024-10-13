@@ -60,11 +60,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void save(SignupRequest signupRequest) {
+	public User save(SignupRequest signupRequest) {
 		User user = signupRequestMapper.toUser(signupRequest);
 		Role role = roleDao.findRoleByName(RoleType.ROLE_USER);
 		user.addRole(role);
-		userDao.save(user);
+		user = userDao.save(user);
+		return user;
 	}
 
 }
