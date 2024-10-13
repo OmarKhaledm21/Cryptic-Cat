@@ -8,4 +8,5 @@ import com.cryptic_cat.entity.RefreshToken;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     RefreshToken findByToken(String token);
     List<RefreshToken> findByUserIdOrderByExpiryDateDesc(long userId);
+    void deleteByUserId(long userId);
 }

@@ -22,6 +22,8 @@ import com.cryptic_cat.security.JwtTokenProvider;
 import com.cryptic_cat.service.AuthService;
 import com.cryptic_cat.service.UserService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -30,13 +32,17 @@ public class AuthServiceImpl implements AuthService {
 	private UserService userService;
 	private RefreshTokenRepository refreshTokenRepository;
 
-	@Autowired
 	public AuthServiceImpl(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider,
 			UserService userService, RefreshTokenRepository refreshTokenRepository) {
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenProvider = jwtTokenProvider;
 		this.userService = userService;
 		this.refreshTokenRepository = refreshTokenRepository;
+	}
+	
+	public User getCurrentUser() {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return user;
 	}
 
 	public TokenResponse authenticateAndGenerateToken(LoginRequest loginRequest) {
@@ -46,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = getCurrentUser();
 
 			String accessToken = jwtTokenProvider.generateToken(user);
 			RefreshToken refreshToken = createRefreshToken(user);
@@ -72,12 +78,20 @@ public class AuthServiceImpl implements AuthService {
 				.build();
 	}
 
-	public String refreshAccessToken(String refreshToken) {
+	public TokenResponse refreshAccessToken(String refreshToken) {
 		RefreshToken storedRefreshToken = refreshTokenRepository.findByToken(refreshToken);
 		if (storedRefreshToken == null || storedRefreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
 			throw new InvalidTokenException("Invalid refresh token.");
 		}
 		User user = (User) userService.loadUserByUsername(storedRefreshToken.getUser().getUsername());
-		return jwtTokenProvider.generateToken(user);
+		String accessToken = jwtTokenProvider.generateToken(user);
+		return TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+	}
+
+	@Override
+	@Transactional
+	public void logout() {
+		User user = getCurrentUser();
+		refreshTokenRepository.deleteByUserId(user.getId());
 	}
 }

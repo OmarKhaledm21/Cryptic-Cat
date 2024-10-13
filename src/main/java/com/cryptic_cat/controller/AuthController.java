@@ -26,7 +26,6 @@ public class AuthController {
 	private UserService userService;
 	private AuthService authService;
 
-	@Autowired
 	public AuthController(UserService userService, AuthService authService) {
 		this.userService = userService;
 		this.authService = authService;
@@ -35,30 +34,37 @@ public class AuthController {
 	@GetMapping("/test")
 	public ResponseEntity<String> testProtected() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return ResponseEntity.ok("Authenticated user: " + user.getUsername() + " " + user.getId()+" "+user.getRoles());
+		return ResponseEntity
+				.ok("Authenticated user: " + user.getUsername() + " " + user.getId() + " " + user.getRoles());
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<UserRegisterResponse> signup(@RequestBody SignupRequest signupRequest) {
-		User savedUser = userService.save(signupRequest);
+		userService.save(signupRequest);
 
-		UserRegisterResponse response = UserRegisterResponse.builder().message("User registered successfully")
-				.creationTimeStamp(LocalDateTime.now()).build();
+		UserRegisterResponse userRegistrationResponse = UserRegisterResponse.builder()
+				.message("User registered successfully")
+				.creationTimeStamp(LocalDateTime.now())
+				.build();
 
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(userRegistrationResponse);
 	}
 
 	@PostMapping("/login")
 	public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-		TokenResponse token = authService.authenticateAndGenerateToken(loginRequest);
-		return ResponseEntity.ok(token);
+		TokenResponse tokenResponse = authService.authenticateAndGenerateToken(loginRequest);
+		return ResponseEntity.ok(tokenResponse);
+	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<String> login() {
+		this.authService.logout();
+		return ResponseEntity.ok("User logged out successfully");
 	}
 
 	@PostMapping("/refresh-token")
 	public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-		String newAccessToken = authService.refreshAccessToken(refreshTokenRequest.getRefreshToken());
-		TokenResponse tokenResponse = TokenResponse.builder().accessToken(newAccessToken)
-				.refreshToken(refreshTokenRequest.getRefreshToken()).build();
+		TokenResponse tokenResponse = authService.refreshAccessToken(refreshTokenRequest.getRefreshToken());
 		return ResponseEntity.ok(tokenResponse);
 	}
 
