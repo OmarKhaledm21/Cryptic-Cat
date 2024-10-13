@@ -1,6 +1,7 @@
 package com.cryptic_cat.payload.request;
 
 import lombok.AllArgsConstructor;
+
 import lombok.Getter;
 import lombok.Setter;
 

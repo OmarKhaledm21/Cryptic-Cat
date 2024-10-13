@@ -1,7 +1,10 @@
 package com.cryptic_cat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +30,13 @@ public class AuthController {
 
 	@GetMapping("/test")
 	public ResponseEntity<String> testProtected() {
-		return ResponseEntity.ok("test successfully");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated()) {
+			String username = authentication.getName();
+			return ResponseEntity.ok("Authenticated user: " + username);
+		}
+
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
 	}
 
 	@PostMapping("/signup")

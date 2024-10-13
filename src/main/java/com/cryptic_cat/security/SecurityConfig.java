@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.cryptic_cat.enums.RoleType;
 import com.cryptic_cat.exception.CustomAccessDeniedHandler;
 import com.cryptic_cat.service.UserService;
 
@@ -56,7 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/v1/auth/signup").permitAll()
                                 .requestMatchers("/api/v1/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/v1/auth/test").authenticated()
-                                .requestMatchers("/systems/**").hasRole("ADMIN")
+                                .requestMatchers("/systems/**").hasAuthority(RoleType.ROLE_ADMIN.name())
                              
                                 .anyRequest().authenticated()
                 )

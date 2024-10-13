@@ -15,6 +15,7 @@ import com.cryptic_cat.dao.RoleDao;
 import com.cryptic_cat.dao.UserDao;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
+import com.cryptic_cat.enums.RoleType;
 import com.cryptic_cat.mapper.SignupRequestMapper;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.service.UserService;
@@ -53,14 +54,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	@Transactional
 	public void save(SignupRequest signupRequest) {
 		User user = signupRequestMapper.toUser(signupRequest);
-		Role role = roleDao.findRoleByName("ROLE_USER");
+		Role role = roleDao.findRoleByName(RoleType.ROLE_USER);
 		user.addRole(role);
 		userDao.save(user);
 	}

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cryptic_cat.dao.RoleDao;
 import com.cryptic_cat.entity.Role;
+import com.cryptic_cat.enums.RoleType;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -16,9 +17,9 @@ public class RoleDaoImpl implements RoleDao {
 		entityManager = theEntityManager;
 	}
 
-	public Role findRoleByName(String theRoleName) {
+	public Role findRoleByName(RoleType roleType) {
 		TypedQuery<Role> theQuery = entityManager.createQuery("FROM Role WHERE name=:roleName", Role.class);
-		theQuery.setParameter("roleName", theRoleName);
+		theQuery.setParameter("roleName", roleType);
 		
 		Role theRole = null;
 		
