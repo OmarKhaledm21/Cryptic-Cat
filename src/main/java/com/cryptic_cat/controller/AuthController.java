@@ -37,9 +37,10 @@ public class AuthController {
 	@GetMapping("/test")
 	public ResponseEntity<String> testProtected() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user =(User) authentication.getPrincipal();
 		if (authentication != null && authentication.isAuthenticated()) {
 			String username = authentication.getName();
-			return ResponseEntity.ok("Authenticated user: " + username);
+			return ResponseEntity.ok("Authenticated user: " + username+" "+ user.getId());
 		}
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");

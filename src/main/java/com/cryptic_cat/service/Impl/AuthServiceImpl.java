@@ -46,11 +46,10 @@ public class AuthServiceImpl implements AuthService {
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			
-			User user = userService.findByUserName(loginRequest.getUserName());
-			UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUserName());
+			User userDetails = (User) userService.loadUserByUsername(loginRequest.getUserName());
 			
 			String accessToken = jwtTokenProvider.generateToken(userDetails);
-            RefreshToken refreshToken = createRefreshToken(userDetails,user);
+            RefreshToken refreshToken = createRefreshToken(userDetails);
             refreshTokenRepository.save(refreshToken);
             
             TokenResponse tokenResponse = TokenResponse.builder()
@@ -63,11 +62,11 @@ public class AuthServiceImpl implements AuthService {
 		}
 	}
 	
-	public RefreshToken createRefreshToken(UserDetails userDetails,User user) {
+	public RefreshToken createRefreshToken(User userDetails) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(jwtTokenProvider.generateRefreshToken(userDetails)); 
         refreshToken.setExpiryDate(LocalDateTime.now().plusDays(30)); 
-        refreshToken.setUser(user); 
+        refreshToken.setUser(userDetails); 
         return refreshToken;
     }
 
@@ -77,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidTokenException("Invalid refresh token.");
         }
 
-        UserDetails userDetails = userService.loadUserByUsername(storedRefreshToken.getUser().getUserName());
+        UserDetails userDetails = userService.loadUserByUsername(storedRefreshToken.getUser().getUsername());
         return jwtTokenProvider.generateToken(userDetails);
     }
 }

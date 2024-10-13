@@ -3,6 +3,11 @@ package com.cryptic_cat.entity;
 import java.util.ArrayList;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -30,7 +35,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,15 +47,15 @@ public class User {
 
 	@Column(name = "password")
 	private String password;
-	
+
 	@Column(name = "email", unique = true)
-	private String email;	
-	
+	private String email;
+
 	@Column(name = "first_name")
-	private String firstName;	
-	
+	private String firstName;
+
 	@Column(name = "last_name")
-	private String lastName;	
+	private String lastName;
 
 	@Column(name = "enabled")
 	private boolean enabled;
@@ -61,7 +66,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
     
-
 	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled) {
 		this.userName = userName;
 		this.password = password;
@@ -70,21 +74,47 @@ public class User {
 		this.lastName = lastName;
 		this.enabled = enabled;
 	}
-    
-    
-    public User(String userName, String password, String email, String firstName, String lastName, boolean enabled, Collection<Role> roles) {
-	    this.userName = userName;
-	    this.password = password;
-	    this.enabled = enabled;
-	    this.email = email;
-	    this.roles = roles;
-    }
-    
-    public void addRole(Role role) {
-    	if(roles == null) {
-    		roles = new ArrayList<Role>();
-    	}
-    	roles.add(role);
-    }
+
+	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled,
+			Collection<Role> roles) {
+		this.userName = userName;
+		this.password = password;
+		this.enabled = enabled;
+		this.email = email;
+		this.roles = roles;
+	}
+
+	public void addRole(Role role) {
+		if (roles == null) {
+			roles = new ArrayList<Role>();
+		}
+		roles.add(role);
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public String getUsername() {
+		return this.userName;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return UserDetails.super.isAccountNonExpired();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return UserDetails.super.isAccountNonLocked();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return UserDetails.super.isCredentialsNonExpired();
+	}
 
 }
