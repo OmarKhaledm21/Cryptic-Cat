@@ -56,6 +56,7 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/api/v1/auth/signup").permitAll()
                                 .requestMatchers("/api/v1/auth/login").permitAll()
+                                .requestMatchers("/api/v1/auth/refresh-token").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/v1/auth/test").authenticated()
                                 .requestMatchers("/systems/**").hasAuthority(RoleType.ROLE_ADMIN.name())
                              

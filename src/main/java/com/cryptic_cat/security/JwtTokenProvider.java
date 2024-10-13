@@ -23,6 +23,9 @@ public class JwtTokenProvider {
 
 	@Value("${security.jwt.expiration-time}")
 	private long jwtExpiration;
+	
+	@Value("${security.jwt.refresher-expiration-time}")
+	private long jwtRefresherExpiration;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -40,17 +43,35 @@ public class JwtTokenProvider {
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 		return buildToken(extraClaims, userDetails, jwtExpiration);
 	}
+	
+	public String generateRefreshToken(UserDetails userDetails) {
+		return generateRefreshToken(new HashMap(),userDetails);
+	}
+	
+	public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+		return buildRefreshToken(extraClaims, userDetails, jwtRefresherExpiration);
+	}
 
 	public long getExpirationTime() {
 		return jwtExpiration;
 	}
 
 	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
-		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+		return Jwts.builder().setClaims(extraClaims)
+				.setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 	}
+	
+	public String buildRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+		return Jwts.builder().setClaims(extraClaims)
+				.setSubject(userDetails.getUsername())
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+	}
+
 
 	public boolean isTokenValid(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);

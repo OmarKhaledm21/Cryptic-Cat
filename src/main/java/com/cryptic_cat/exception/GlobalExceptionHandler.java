@@ -27,6 +27,19 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
 	}
 	
+	@ExceptionHandler({ InvalidTokenException.class })
+	public ResponseEntity<ErrorResponse> handleInvalidTokenException(
+			InvalidTokenException exception) {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.message(exception.getMessage())
+				.errorCode(HttpStatus.UNAUTHORIZED.value())
+				.status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+				.timestamp(LocalDateTime.now())
+				.build();
+
+		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
+	}
+	
 	 @ExceptionHandler(UserNotFoundException.class)
 	    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
 	        ErrorResponse errorResponse = ErrorResponse.builder()

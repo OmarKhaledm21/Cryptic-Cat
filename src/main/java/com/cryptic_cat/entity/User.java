@@ -1,6 +1,7 @@
 package com.cryptic_cat.entity;
 
 import java.util.ArrayList;
+
 import java.util.Collection;
 
 import jakarta.persistence.CascadeType;
@@ -85,9 +86,5 @@ public class User {
     	}
     	roles.add(role);
     }
-
-
-
-
 
 }

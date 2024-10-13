@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.payload.request.LoginRequest;
+import com.cryptic_cat.payload.request.RefreshTokenRequest;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.payload.response.TokenResponse;
 import com.cryptic_cat.payload.response.UserRegisterResponse;
@@ -58,9 +59,17 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-		String stringToken = authService.authenticateAndGenerateToken(loginRequest);
-		TokenResponse token = TokenResponse.builder().token(stringToken).build();
+		TokenResponse token = authService.authenticateAndGenerateToken(loginRequest);
 		return ResponseEntity.ok(token);
+	}
+	
+	@PostMapping("/refresh-token")
+	public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+	    String newAccessToken = authService.refreshAccessToken(refreshTokenRequest.getRefreshToken());
+	    TokenResponse tokenResponse = TokenResponse.builder()
+	    		.accessToken(newAccessToken)
+	    		.refreshToken(refreshTokenRequest.getRefreshToken()).build();
+	    return ResponseEntity.ok(tokenResponse);
 	}
 
 }
