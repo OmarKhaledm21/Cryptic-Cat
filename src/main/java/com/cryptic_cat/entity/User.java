@@ -61,7 +61,10 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "users_roles", 
+		joinColumns = @JoinColumn(name = "user_id"), 
+		inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
 	private Collection<Role> roles;
 
 	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled) {
