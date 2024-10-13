@@ -59,13 +59,11 @@ public class User implements UserDetails {
 
 	@Column(name = "enabled")
 	private boolean enabled;
-	
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
-    
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Collection<Role> roles;
+
 	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled) {
 		this.userName = userName;
 		this.password = password;
@@ -88,7 +86,9 @@ public class User implements UserDetails {
 		if (roles == null) {
 			roles = new ArrayList<Role>();
 		}
-		roles.add(role);
+		if (!roles.contains(role)) {
+			roles.add(role);
+		}
 	}
 
 	@Override

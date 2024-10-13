@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
+import com.cryptic_cat.entity.User;
 import com.cryptic_cat.exception.InvalidUsernameOrPasswordException;
 import com.cryptic_cat.service.UserService;
 
@@ -42,26 +43,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 			
 			if (userName != null) {
-				UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-				if (tokenProvider.isTokenValid(jwt, userDetails)) {
+				User user = (User) this.userDetailsService.loadUserByUsername(userName);
+				if (tokenProvider.isTokenValid(jwt, user)) {
 
-					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-							null, userDetails.getAuthorities());
+					UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user,
+							null, user.getAuthorities());
 					authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(authToken);
 				}
 			}
 		} catch (SignatureException ex) {
-			System.out.println("Error in JWT Authentication Filter: " + ex.getMessage() + " " + ex.getClass());
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature.");
 			return;
 		} catch (ExpiredJwtException ex) {
-
-			System.out.println("Error in JWT Authentication Filter: " + ex.getMessage() + " " + ex.getClass());
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT has expired.");
 			return;
 		} catch (Exception ex) {
-			System.out.println("Error in JWT Authentication Filter: " + ex.getMessage() + " " + ex.getClass());
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token.");
 			return;
 		}

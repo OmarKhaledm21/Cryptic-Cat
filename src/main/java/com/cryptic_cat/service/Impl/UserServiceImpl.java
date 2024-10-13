@@ -45,12 +45,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userDao.findByUserName(userName);
-		if (user == null) {
-			throw new UsernameNotFoundException("Invalid username or password.");
-		}
-		return user;
+	public UserDetails loadUserByUsername(String userName) {
+		return userDao.findByUserName(userName);
 	}
 
 	@Override

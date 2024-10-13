@@ -1,13 +1,13 @@
 package com.cryptic_cat.security;
 
 import io.jsonwebtoken.*;
+
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-
+import com.cryptic_cat.entity.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -36,46 +36,46 @@ public class JwtTokenProvider {
 		return claimsResolver.apply(claims);
 	}
 
-	public String generateToken(UserDetails userDetails) {
-		return generateToken(new HashMap(), userDetails);
+	public String generateToken(User user) {
+		return generateToken(new HashMap(), user);
 	}
 
-	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-		return buildToken(extraClaims, userDetails, jwtExpiration);
+	public String generateToken(Map<String, Object> extraClaims, User user) {
+		return buildToken(extraClaims, user, jwtExpiration);
 	}
 	
-	public String generateRefreshToken(UserDetails userDetails) {
-		return generateRefreshToken(new HashMap(),userDetails);
+	public String generateRefreshToken(User user) {
+		return generateRefreshToken(new HashMap(),user);
 	}
 	
-	public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-		return buildRefreshToken(extraClaims, userDetails, jwtRefresherExpiration);
+	public String generateRefreshToken(Map<String, Object> extraClaims, User user) {
+		return buildRefreshToken(extraClaims, user, jwtRefresherExpiration);
 	}
 
 	public long getExpirationTime() {
 		return jwtExpiration;
 	}
 
-	private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+	private String buildToken(Map<String, Object> extraClaims, User user, long expiration) {
 		return Jwts.builder().setClaims(extraClaims)
-				.setSubject(userDetails.getUsername())
+				.setSubject(user.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 	}
 	
-	public String buildRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+	public String buildRefreshToken(Map<String, Object> extraClaims, User user, long expiration) {
 		return Jwts.builder().setClaims(extraClaims)
-				.setSubject(userDetails.getUsername())
+				.setSubject(user.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
 	}
 
 
-	public boolean isTokenValid(String token, UserDetails userDetails) {
+	public boolean isTokenValid(String token, User user) {
 		final String username = extractUsername(token);
-		return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+		return (username.equals(user.getUsername())) && !isTokenExpired(token);
 	}
 
 	private boolean isTokenExpired(String token) {

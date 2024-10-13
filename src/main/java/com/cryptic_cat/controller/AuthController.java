@@ -3,9 +3,7 @@ package com.cryptic_cat.controller;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,26 +34,18 @@ public class AuthController {
 
 	@GetMapping("/test")
 	public ResponseEntity<String> testProtected() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user =(User) authentication.getPrincipal();
-		if (authentication != null && authentication.isAuthenticated()) {
-			String username = authentication.getName();
-			return ResponseEntity.ok("Authenticated user: " + username+" "+ user.getId());
-		}
-
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ResponseEntity.ok("Authenticated user: " + user.getUsername() + " " + user.getId()+" "+user.getRoles());
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<UserRegisterResponse> signup(@RequestBody SignupRequest signupRequest) {
-	    User savedUser = userService.save(signupRequest);
-	    
-	    UserRegisterResponse response = UserRegisterResponse.builder()
-	            .message("User registered successfully")
-	            .creationTimeStamp(LocalDateTime.now())
-	            .build();
-	    
-	    return ResponseEntity.ok(response);
+		User savedUser = userService.save(signupRequest);
+
+		UserRegisterResponse response = UserRegisterResponse.builder().message("User registered successfully")
+				.creationTimeStamp(LocalDateTime.now()).build();
+
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/login")
@@ -63,14 +53,13 @@ public class AuthController {
 		TokenResponse token = authService.authenticateAndGenerateToken(loginRequest);
 		return ResponseEntity.ok(token);
 	}
-	
+
 	@PostMapping("/refresh-token")
 	public ResponseEntity<TokenResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-	    String newAccessToken = authService.refreshAccessToken(refreshTokenRequest.getRefreshToken());
-	    TokenResponse tokenResponse = TokenResponse.builder()
-	    		.accessToken(newAccessToken)
-	    		.refreshToken(refreshTokenRequest.getRefreshToken()).build();
-	    return ResponseEntity.ok(tokenResponse);
+		String newAccessToken = authService.refreshAccessToken(refreshTokenRequest.getRefreshToken());
+		TokenResponse tokenResponse = TokenResponse.builder().accessToken(newAccessToken)
+				.refreshToken(refreshTokenRequest.getRefreshToken()).build();
+		return ResponseEntity.ok(tokenResponse);
 	}
 
 }

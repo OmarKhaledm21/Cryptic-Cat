@@ -2,6 +2,7 @@ package com.cryptic_cat.entity;
 
 import com.cryptic_cat.enums.RoleType;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,7 +30,7 @@ public class Role {
 	@Column(name = "id")
 	private Long id;
 
-	@Enumerated(EnumType.STRING) // Store the enum as a string in the database
+	@Enumerated(EnumType.STRING)
 	@Column(name = "name")
 	private RoleType name;
 
