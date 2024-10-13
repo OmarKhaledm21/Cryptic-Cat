@@ -36,13 +36,13 @@ public class User {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "username")
+	@Column(name = "username", unique = true)
 	private String userName;
 
 	@Column(name = "password")
 	private String password;
 	
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;	
 	
 	@Column(name = "first_name")

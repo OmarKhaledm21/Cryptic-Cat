@@ -16,6 +16,7 @@ import com.cryptic_cat.dao.UserDao;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.enums.RoleType;
+import com.cryptic_cat.exception.UserNotFoundException;
 import com.cryptic_cat.mapper.SignupRequestMapper;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.service.UserService;
@@ -40,7 +41,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findByUserName(String userName) {
-		return userDao.findByUserName(userName);
+		User user = userDao.findByUserName(userName);
+		if (user == null) {
+			throw new UserNotFoundException("Cannot find user with username: " + userName);
+		}
+		return user;
 	}
 
 	@Override
