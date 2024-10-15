@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Ignore images directory ###
-src/main/static/
+src/main/resources/static/
 
 
 ### Ignore database scripts ###
