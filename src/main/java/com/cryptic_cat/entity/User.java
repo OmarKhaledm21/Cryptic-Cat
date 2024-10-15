@@ -1,5 +1,7 @@
 package com.cryptic_cat.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import java.util.Collection;
@@ -45,43 +47,53 @@ public class User implements UserDetails {
 	@Column(name = "username", unique = true)
 	private String userName;
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "email", unique = true)
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
 
-	@Column(name = "last_name")
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@Column(name = "enabled")
+	@Column(name = "birth_date", nullable = false)
+	private LocalDate birthDate;
+
+	@Column(name = "bio")
+	private String biography;
+	
+	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
+	@Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "users_roles", 
-		joinColumns = @JoinColumn(name = "user_id"), 
-		inverseJoinColumns = @JoinColumn(name = "role_id")
-	)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Collection<Role> roles;
 
-	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled) {
+	public User(String userName, String password, String email, String firstName, String lastName, LocalDate birthDate, boolean enabled) {
 		this.userName = userName;
 		this.password = password;
 		this.email = email;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.birthDate = birthDate;
 		this.enabled = enabled;
 	}
 
-	public User(String userName, String password, String email, String firstName, String lastName, boolean enabled,
+	public User(String userName, String password, String email, String firstName, String lastName,LocalDate birthDate, boolean enabled,
 			Collection<Role> roles) {
 		this.userName = userName;
 		this.password = password;
 		this.enabled = enabled;
 		this.email = email;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.birthDate = birthDate;
 		this.roles = roles;
 	}
 

@@ -28,9 +28,6 @@ public class UserFollowServiceImpl implements UserFollowService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private UserMapper userMapper;
-	
 	private User checkUserExistence(Long followedUserId) {
 		User followedUser = userRepository.findById(followedUserId);
 		if (followedUser == null) {
@@ -67,7 +64,7 @@ public class UserFollowServiceImpl implements UserFollowService {
 		List<User> userFollowersList = userFollowRepository.findFollowersByUserId(theUser.getId());
 		List<UserDTO> userFollowersDtoList = new ArrayList<UserDTO>();
 		for (User currentUser : userFollowersList) {
-			userFollowersDtoList.add(userMapper.toUserDTO(currentUser));
+			userFollowersDtoList.add(UserMapper.toUserDTO(currentUser));
 		}
 		return userFollowersDtoList;
 	}
@@ -77,7 +74,7 @@ public class UserFollowServiceImpl implements UserFollowService {
 		List<User> followedUsersList = userFollowRepository.findFollowingUsersByUserId(theUser.getId());
 		List<UserDTO> followedUsersDtoList = new ArrayList<UserDTO>();
 		for (User currentUser : followedUsersList) {
-			followedUsersDtoList.add(userMapper.toUserDTO(currentUser));
+			followedUsersDtoList.add(UserMapper.toUserDTO(currentUser));
 		}
 		return followedUsersDtoList;
 	}

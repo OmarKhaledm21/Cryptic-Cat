@@ -3,6 +3,9 @@ package com.cryptic_cat.mapper;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.entity.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +26,10 @@ public class SignupRequestMapper {
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .firstName(signupRequest.getFirstName())
                 .lastName(signupRequest.getLastName())
+                .email(signupRequest.getEmail())
+                .createdAt(LocalDateTime.now())
+                .biography(signupRequest.getBiography())
+                .birthDate(signupRequest.getBirthDate())
                 .enabled(true)
                 .build();
     }
