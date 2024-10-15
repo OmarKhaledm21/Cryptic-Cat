@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.cryptic_cat.payload.response.ErrorResponse;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,7 +40,25 @@ public class GlobalExceptionHandler {
 
 		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
 	}
+	
+	@ExceptionHandler({ SignatureException.class })
+	public ResponseEntity<ErrorResponse> handleSignatureException(SignatureException exception) {
+		ErrorResponse errorResponse = ErrorResponse.builder().message(exception.getMessage())
+				.errorCode(HttpStatus.UNAUTHORIZED.value()).status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+				.timestamp(LocalDateTime.now()).build();
 
+		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
+	}
+
+	@ExceptionHandler({ AccessDeniedException.class })
+	public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException exception) {
+		ErrorResponse errorResponse = ErrorResponse.builder().message(exception.getMessage())
+				.errorCode(HttpStatus.UNAUTHORIZED.value()).status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+				.timestamp(LocalDateTime.now()).build();
+
+		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
+	}
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
 		ErrorResponse errorResponse = ErrorResponse.builder().message(exception.getMessage())
@@ -99,5 +122,27 @@ public class GlobalExceptionHandler {
 				.timestamp(LocalDateTime.now()).build();
 		return ResponseEntity.status(errorResponse.getErrorCode()).body(errorResponse);
 	}
+	
+	@ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleTokenExpiredException(ExpiredJwtException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .errorCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+	
+	@ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> handleMalformedJwtException(MalformedJwtException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .errorCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 
 }
