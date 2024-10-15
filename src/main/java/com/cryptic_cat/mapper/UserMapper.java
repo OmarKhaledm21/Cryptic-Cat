@@ -19,6 +19,7 @@ public class UserMapper {
         		.createdAt(user.getCreatedAt())
         		.birthDate(user.getBirthDate())
         		.biography(user.getBiography())
+        		.profilePicture(user.getProfilePicture())
         		.build();
         return dto;
     }

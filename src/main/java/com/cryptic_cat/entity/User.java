@@ -65,6 +65,9 @@ public class User implements UserDetails {
 	@Column(name = "bio")
 	private String biography;
 	
+	@Column(name = "profile_picture")
+    private String profilePicture;
+	
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
