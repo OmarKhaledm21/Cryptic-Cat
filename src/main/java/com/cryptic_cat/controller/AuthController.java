@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cryptic_cat.entity.User;
+import com.cryptic_cat.mapper.UserMapper;
 import com.cryptic_cat.payload.request.LoginRequest;
 import com.cryptic_cat.payload.request.RefreshTokenRequest;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.payload.response.TokenResponse;
+import com.cryptic_cat.payload.response.UserDTO;
 import com.cryptic_cat.payload.response.UserRegisterResponse;
 import com.cryptic_cat.service.AuthService;
 import com.cryptic_cat.service.UserService;
@@ -31,11 +33,11 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	@GetMapping("/test")
-	public ResponseEntity<String> testProtected() {
+	@GetMapping("/data")
+	public ResponseEntity<UserDTO> testProtected() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return ResponseEntity
-				.ok("Authenticated user: " + user.getUsername() + " " + user.getId() + " " + user.getRoles());
+				.ok(UserMapper.toUserDTO(user));
 	}
 
 	@PostMapping("/signup")

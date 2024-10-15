@@ -55,7 +55,7 @@ public class SecurityConfig {
 				.permitAll().requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token").permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").authenticated()
-				.requestMatchers(HttpMethod.GET, "/api/v1/auth/test").authenticated()
+				.requestMatchers(HttpMethod.GET, "/api/v1/auth/data").authenticated()
 
 				.requestMatchers("/systems/**").hasAuthority(RoleType.ROLE_ADMIN.name())
 
