@@ -20,6 +20,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
+    private String profilePicture;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
