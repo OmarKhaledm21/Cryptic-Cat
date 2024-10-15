@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.enums.RoleType;
+import com.cryptic_cat.exception.ImageFileException;
 import com.cryptic_cat.exception.UserNotFoundException;
 import com.cryptic_cat.mapper.SignupRequestMapper;
 import com.cryptic_cat.payload.request.SignupRequest;
@@ -58,6 +59,17 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
+	
+	
+
+	@Override
+	public User findById(Long userId) {
+		User user = userRepository.findById(userId);
+		if (user == null) {
+			throw new UserNotFoundException("Cannot find user with user id: " + userId);
+		}
+		return user;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) {
@@ -80,25 +92,17 @@ public class UserServiceImpl implements UserService {
 		User user = getCurrentUser();
 
 		if (file == null || file.isEmpty()) {
-	        throw new IllegalArgumentException("File cannot be empty");
+	        throw new ImageFileException("Image file cannot be empty.");
 	    }
 		
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path path = Paths.get(UPLOAD_DIR);
         
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not create upload directory", e);
-            }
-        }
-        
         Path filePath = path.resolve(fileName);
         try {
             Files.write(filePath, file.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
+            throw new ImageFileException("Failed to store image file.");
         }
 	    
         user.setProfilePicture(fileName);
@@ -106,6 +110,7 @@ public class UserServiceImpl implements UserService {
 
         return "/profile-pictures/" + fileName;
 	}
+	
 	
 	
 	

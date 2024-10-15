@@ -156,4 +156,15 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+	
+	@ExceptionHandler(ImageFileException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyImageFileException(ImageFileException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .errorCode(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }
