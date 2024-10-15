@@ -1,6 +1,5 @@
 package com.cryptic_cat.service.Impl;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,9 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cryptic_cat.config.WebConfig;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.enums.RoleType;
+import com.cryptic_cat.exception.ImageFileException;
 import com.cryptic_cat.exception.UserNotFoundException;
 import com.cryptic_cat.mapper.SignupRequestMapper;
 import com.cryptic_cat.payload.request.SignupRequest;
@@ -28,9 +29,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
-	public static final String UPLOAD_DIR = "src/main/resources/static/profile-pictures/";
-
 
 	private UserRepository userRepository;
 
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		this.roleDao = roleDao;
 		this.signupRequestMapper = signupRequestMapper;
 	}
-	
+
 	public User getCurrentUser() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return user;
@@ -55,6 +53,15 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
 			throw new UserNotFoundException("Cannot find user with username: " + userName);
+		}
+		return user;
+	}
+
+	@Override
+	public User findById(Long userId) {
+		User user = userRepository.findById(userId);
+		if (user == null) {
+			throw new UserNotFoundException("Cannot find user with user id: " + userId);
 		}
 		return user;
 	}
@@ -80,34 +87,23 @@ public class UserServiceImpl implements UserService {
 		User user = getCurrentUser();
 
 		if (file == null || file.isEmpty()) {
-	        throw new IllegalArgumentException("File cannot be empty");
-	    }
-		
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(UPLOAD_DIR);
-        
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                throw new RuntimeException("Could not create upload directory", e);
-            }
-        }
-        
-        Path filePath = path.resolve(fileName);
-        try {
-            Files.write(filePath, file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to store file", e);
-        }
-	    
-        user.setProfilePicture(fileName);
-        userRepository.save(user);
+			throw new ImageFileException("Image file cannot be empty.");
+		}
 
-        return "/profile-pictures/" + fileName;
+		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+		Path path = Paths.get(WebConfig.getProfilePicturesUploadDir());
+
+		Path filePath = path.resolve(fileName);
+		try {
+			Files.write(filePath, file.getBytes());
+		} catch (IOException e) {
+			throw new ImageFileException("Failed to store image file.");
+		}
+
+		user.setProfilePicture(fileName);
+		userRepository.save(user);
+
+		return "/profile-pictures/" + fileName;
 	}
-	
-	
-	
 
 }
