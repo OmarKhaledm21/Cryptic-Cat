@@ -32,6 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+### Ignore images directory ###
+src/main/static/
 
 
+### Ignore database scripts ###
 scripts/
+
