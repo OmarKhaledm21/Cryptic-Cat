@@ -61,7 +61,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET,"/api/v1/auth/test").authenticated()
                                 
                                 .requestMatchers("/systems/**").hasAuthority(RoleType.ROLE_ADMIN.name())
-                             
+                                
+                                .requestMatchers("/api/v1/follow/**").authenticated()
                                 .anyRequest().authenticated()
                 )
         		.exceptionHandling(e -> e.accessDeniedHandler(customAccessDeniedHandler)

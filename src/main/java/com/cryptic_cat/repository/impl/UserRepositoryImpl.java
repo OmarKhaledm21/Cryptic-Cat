@@ -38,4 +38,20 @@ public class UserRepositoryImpl implements UserRepository {
 		return theUser;
 	}
 
+	@Override
+	public User findById(Long id) {
+		TypedQuery<User> theQuery = entityManager.createQuery("from User where id=:userId and enabled=true",
+				User.class);
+		theQuery.setParameter("userId", id);
+
+		User theUser = null;
+		try {
+			theUser = theQuery.getSingleResult();
+		} catch (Exception e) {
+			theUser = null;
+		}
+
+		return theUser;
+	}
+
 }

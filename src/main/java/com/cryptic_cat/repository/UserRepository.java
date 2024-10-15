@@ -7,5 +7,7 @@ public interface UserRepository {
 	User findByUserName(String userName);
 
 	User save(User user);
+	
+	User findById(Long id);
 
 }
