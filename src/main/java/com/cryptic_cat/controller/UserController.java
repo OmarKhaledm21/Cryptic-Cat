@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.mapper.UserMapper;
 import com.cryptic_cat.payload.response.GeneralInformationResponse;
-import com.cryptic_cat.payload.response.UserDTO;
+import com.cryptic_cat.payload.response.UserDataResponse;
 import com.cryptic_cat.service.UserService;
 
 @RestController
@@ -25,10 +25,10 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping("/{userId}")
-	public ResponseEntity<UserDTO> getUserData(@PathVariable Long userId) {
+	public ResponseEntity<UserDataResponse> getUserData(@PathVariable Long userId) {
 		User user = this.userService.findById(userId);
 		return ResponseEntity
-				.ok(UserMapper.toUserDTO(user));
+				.ok(UserMapper.toUserDataResponse(user));
 	}
 	
 	@PostMapping("/uploadProfilePicture")

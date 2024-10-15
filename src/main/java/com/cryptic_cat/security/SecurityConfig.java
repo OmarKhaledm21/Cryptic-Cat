@@ -57,6 +57,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").authenticated()
 				.requestMatchers(HttpMethod.GET, "/api/v1/auth/data").authenticated()
 				.requestMatchers("/api/v1/users/**").authenticated()
+				.requestMatchers("/api/v1/posts/**").authenticated()
 
 				.requestMatchers("/systems/**").hasAuthority(RoleType.ROLE_ADMIN.name())
 

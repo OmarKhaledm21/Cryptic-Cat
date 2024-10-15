@@ -11,7 +11,7 @@ import com.cryptic_cat.entity.UserFollow;
 import com.cryptic_cat.exception.UserFollowException;
 import com.cryptic_cat.exception.UserNotFoundException;
 import com.cryptic_cat.mapper.UserMapper;
-import com.cryptic_cat.payload.response.UserDTO;
+import com.cryptic_cat.payload.response.UserDataResponse;
 import com.cryptic_cat.repository.UserFollowRepository;
 import com.cryptic_cat.repository.UserRepository;
 
@@ -59,22 +59,22 @@ public class UserFollowServiceImpl implements UserFollowService {
 		userFollowRepository.delete(followRelation);
 	}
 
-	public List<UserDTO> getFollowers(Long userId) {
+	public List<UserDataResponse> getFollowers(Long userId) {
 		User theUser = checkUserExistence(userId);
 		List<User> userFollowersList = userFollowRepository.findFollowersByUserId(theUser.getId());
-		List<UserDTO> userFollowersDtoList = new ArrayList<UserDTO>();
+		List<UserDataResponse> userFollowersDtoList = new ArrayList<UserDataResponse>();
 		for (User currentUser : userFollowersList) {
-			userFollowersDtoList.add(UserMapper.toUserDTO(currentUser));
+			userFollowersDtoList.add(UserMapper.toUserDataResponse(currentUser));
 		}
 		return userFollowersDtoList;
 	}
 
-	public List<UserDTO> getFollowing(Long userId) {
+	public List<UserDataResponse> getFollowing(Long userId) {
 		User theUser = checkUserExistence(userId);
 		List<User> followedUsersList = userFollowRepository.findFollowingUsersByUserId(theUser.getId());
-		List<UserDTO> followedUsersDtoList = new ArrayList<UserDTO>();
+		List<UserDataResponse> followedUsersDtoList = new ArrayList<UserDataResponse>();
 		for (User currentUser : followedUsersList) {
-			followedUsersDtoList.add(UserMapper.toUserDTO(currentUser));
+			followedUsersDtoList.add(UserMapper.toUserDataResponse(currentUser));
 		}
 		return followedUsersDtoList;
 	}

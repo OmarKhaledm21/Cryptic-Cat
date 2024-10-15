@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UserDTO {
+public class UserDataResponse {
     private Long id;
     private String userName;
     private String email;

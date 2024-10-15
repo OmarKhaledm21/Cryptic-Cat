@@ -17,7 +17,7 @@ import com.cryptic_cat.payload.request.LoginRequest;
 import com.cryptic_cat.payload.request.RefreshTokenRequest;
 import com.cryptic_cat.payload.request.SignupRequest;
 import com.cryptic_cat.payload.response.TokenResponse;
-import com.cryptic_cat.payload.response.UserDTO;
+import com.cryptic_cat.payload.response.UserDataResponse;
 import com.cryptic_cat.payload.response.UserRegisterResponse;
 import com.cryptic_cat.service.AuthService;
 import com.cryptic_cat.service.UserService;
@@ -34,10 +34,10 @@ public class AuthController {
 	}
 
 	@GetMapping("/data")
-	public ResponseEntity<UserDTO> testProtected() {
+	public ResponseEntity<UserDataResponse> testProtected() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return ResponseEntity
-				.ok(UserMapper.toUserDTO(user));
+				.ok(UserMapper.toUserDataResponse(user));
 	}
 
 	@PostMapping("/signup")

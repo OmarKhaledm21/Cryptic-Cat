@@ -1,6 +1,5 @@
 package com.cryptic_cat.service.Impl;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cryptic_cat.config.WebConfig;
 import com.cryptic_cat.entity.Role;
 import com.cryptic_cat.entity.User;
 import com.cryptic_cat.enums.RoleType;
@@ -29,9 +29,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
-	public static final String UPLOAD_DIR = "src/main/resources/static/profile-pictures/";
-
 
 	private UserRepository userRepository;
 
@@ -45,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		this.roleDao = roleDao;
 		this.signupRequestMapper = signupRequestMapper;
 	}
-	
+
 	public User getCurrentUser() {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return user;
@@ -59,8 +56,6 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
-	
-	
 
 	@Override
 	public User findById(Long userId) {
@@ -92,27 +87,23 @@ public class UserServiceImpl implements UserService {
 		User user = getCurrentUser();
 
 		if (file == null || file.isEmpty()) {
-	        throw new ImageFileException("Image file cannot be empty.");
-	    }
-		
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(UPLOAD_DIR);
-        
-        Path filePath = path.resolve(fileName);
-        try {
-            Files.write(filePath, file.getBytes());
-        } catch (IOException e) {
-            throw new ImageFileException("Failed to store image file.");
-        }
-	    
-        user.setProfilePicture(fileName);
-        userRepository.save(user);
+			throw new ImageFileException("Image file cannot be empty.");
+		}
 
-        return "/profile-pictures/" + fileName;
+		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+		Path path = Paths.get(WebConfig.getProfilePicturesUploadDir());
+
+		Path filePath = path.resolve(fileName);
+		try {
+			Files.write(filePath, file.getBytes());
+		} catch (IOException e) {
+			throw new ImageFileException("Failed to store image file.");
+		}
+
+		user.setProfilePicture(fileName);
+		userRepository.save(user);
+
+		return "/profile-pictures/" + fileName;
 	}
-	
-	
-	
-	
 
 }

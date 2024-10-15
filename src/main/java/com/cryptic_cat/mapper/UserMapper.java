@@ -1,16 +1,13 @@
 package com.cryptic_cat.mapper;
 
 import com.cryptic_cat.entity.User;
-import com.cryptic_cat.payload.response.UserDTO;
 
-import java.time.LocalDateTime;
-
-import org.springframework.stereotype.Component;
+import com.cryptic_cat.payload.response.UserDataResponse;
 
 public class UserMapper {
 
-    public static UserDTO toUserDTO(User user) {
-        UserDTO dto = UserDTO.builder()
+    public static UserDataResponse toUserDataResponse(User user) {
+        UserDataResponse dto = UserDataResponse.builder()
         		.id(user.getId())
         		.userName(user.getUsername())
         		.email(user.getEmail())

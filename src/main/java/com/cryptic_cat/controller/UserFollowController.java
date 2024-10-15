@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.cryptic_cat.entity.User;
-import com.cryptic_cat.payload.response.UserDTO;
+import com.cryptic_cat.payload.response.UserDataResponse;
 import com.cryptic_cat.service.AuthService;
 import com.cryptic_cat.service.UserFollowService;
 
@@ -35,14 +35,14 @@ public class UserFollowController {
 	}
 	
 	@GetMapping("/followers")
-	public ResponseEntity<List<UserDTO>> getUserFollowers(@RequestParam Long userId){
-		List<UserDTO> followersList = this.userFollowService.getFollowers(userId);
+	public ResponseEntity<List<UserDataResponse>> getUserFollowers(@RequestParam Long userId){
+		List<UserDataResponse> followersList = this.userFollowService.getFollowers(userId);
 		return ResponseEntity.ok(followersList);
 	}
 	
 	@GetMapping("/following")
-	public ResponseEntity<List<UserDTO>> getUserFollowing(@RequestParam Long userId){
-		List<UserDTO> followedUsersList = this.userFollowService.getFollowing(userId);
+	public ResponseEntity<List<UserDataResponse>> getUserFollowing(@RequestParam Long userId){
+		List<UserDataResponse> followedUsersList = this.userFollowService.getFollowing(userId);
 		return ResponseEntity.ok(followedUsersList);
 	}
 }
