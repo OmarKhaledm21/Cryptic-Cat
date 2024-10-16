@@ -200,4 +200,15 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+	
+	@ExceptionHandler(LikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLikeNotFoundException(LikeNotFoundException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .errorCode(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND.getReasonPhrase())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }

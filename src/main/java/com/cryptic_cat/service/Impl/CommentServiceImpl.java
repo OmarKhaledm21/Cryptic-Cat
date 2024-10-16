@@ -45,11 +45,17 @@ public class CommentServiceImpl implements CommentService {
 	public void deleteComment(Long commentId, Long postId) {
 		Comment comment = this.commentRepository.findById(commentId)
 				.orElseThrow(() -> new CommentNotFoundException("Cannot find comment with id: " + commentId));
+		Post post = this.postRepository.findById(postId)
+				.orElseThrow(() -> new PostNotFoundException("Cannot find post with id: " + postId));
+
 		User user = this.authService.getCurrentUser();
-		if (comment.getUser().getId() != user.getId()) {
+
+		if (comment.getUser().getId() != user.getId() && post.getUser().getId() != user.getId()) {
 			throw new UnauthorizedActionException("Cannot remove other users comment");
 		}
 		this.commentRepository.delete(comment);
+		post.setCommentsCount(post.getCommentsCount() - 1);
+		this.postRepository.save(post);
 
 	}
 
