@@ -46,7 +46,8 @@
 	    
 	11. **CrypticCatApplication.java**: The main class that boots up the Spring application.
 
-		![[https://github.com/OmarKhaledm21/Cryptic-Cat/blob/main/docs/screenshots/sc1.png]]
+		![Screenshot of Cryptic Cat](https://github.com/OmarKhaledm21/Cryptic-Cat/blob/main/docs/screenshots/sc1.png)
+
 
 
 ### Project Dependencies
