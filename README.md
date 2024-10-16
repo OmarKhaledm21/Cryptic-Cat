@@ -21,6 +21,15 @@
 
 - A Postman collection is available to help you test the Cryptic Cat API. You can find it in the `docs` directory of this repository.
 
+### Database Initialization
+
+- To set up the database, you can run the initialization script found in the `scripts/` directory.
+
+### Database Diagram
+
+![Screenshot of Cryptic Cat](https://github.com/OmarKhaledm21/Cryptic-Cat/blob/main/docs/screenshots/sc2.png)
+
+
 ### Layered Architecture
 
 - Project structure follows the **Layered Architecture** (also known as **N-tier Architecture**), which is a common approach in Java Spring Boot applications. Each package in the project corresponds to a distinct layer of the application, ensuring separation of concerns. Here's a breakdown of the architecture based on the package names:

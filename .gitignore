@@ -36,6 +36,3 @@ build/
 src/main/resources/static/
 
 
-### Ignore database scripts ###
-scripts/
-
