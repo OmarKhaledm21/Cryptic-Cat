@@ -8,6 +8,7 @@ import com.cryptic_cat.repository.RoleRepository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 @Repository
 public class RoleRepositoryImpl implements RoleRepository {
@@ -31,4 +32,12 @@ public class RoleRepositoryImpl implements RoleRepository {
 		
 		return theRole;
 	}
+
+	@Override
+	@Transactional
+	public Role save(Role role) {
+		return entityManager.merge(role);
+	}
+	
+	
 }
