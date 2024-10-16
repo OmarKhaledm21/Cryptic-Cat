@@ -90,7 +90,8 @@ public class UserServiceImpl implements UserService {
 			throw new ImageFileException("Image file cannot be empty.");
 		}
 
-		String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+		String originalFileName = file.getOriginalFilename().replace(" ", "_");
+		String fileName = UUID.randomUUID() + "_" + originalFileName;
 		Path path = Paths.get(WebConfig.getProfilePicturesUploadDir());
 
 		Path filePath = path.resolve(fileName);

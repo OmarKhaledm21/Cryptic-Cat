@@ -50,7 +50,9 @@ public class PostServiceImpl implements PostService {
 		if (createPostRequest.getImage() == null || createPostRequest.getImage().isEmpty()) {
 			throw new ImageFileException("Image file cannot be empty.");
 		}
-		String fileName = UUID.randomUUID() + "_" + createPostRequest.getImage().getOriginalFilename();
+
+		String originalFileName = createPostRequest.getImage().getOriginalFilename().replace(" ", "_");
+		String fileName = UUID.randomUUID() + "_" + originalFileName;
 		Path path = Paths.get(WebConfig.getPostImageUploadDir());
 		Path filePath = path.resolve(fileName);
 		try {
