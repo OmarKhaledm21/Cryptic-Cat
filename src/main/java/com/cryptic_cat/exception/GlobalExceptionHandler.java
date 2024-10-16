@@ -183,6 +183,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handlePostNotFoundException(UnauthorizedActionException exception) {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(exception.getMessage())
+                .errorCode(HttpStatus.UNAUTHORIZED.value())
+                .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+	
+	@ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException exception) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(exception.getMessage())
                 .errorCode(HttpStatus.NOT_FOUND.value())
                 .status(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .timestamp(LocalDateTime.now())
