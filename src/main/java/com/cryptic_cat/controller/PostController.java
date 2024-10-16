@@ -47,7 +47,7 @@ public class PostController {
 
 	@GetMapping("/post/{postId}")
 	public ResponseEntity<PostResponse> getPost(@PathVariable Long postId) {
-		PostResponse post = this.postService.getPost(postId);
+		PostResponse post = this.postService.getPostWithComments(postId);
 		return ResponseEntity.ok(post);
 	}
 

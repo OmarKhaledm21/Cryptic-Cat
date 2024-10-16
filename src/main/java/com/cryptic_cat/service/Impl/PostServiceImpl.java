@@ -86,9 +86,11 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostResponse getPost(Long postId) {
-		Post post = this.postRepository.findById(postId)
-				.orElseThrow(() -> new PostNotFoundException("Cannot find post with id: " + postId));
+	public PostResponse getPostWithComments(Long postId) {
+		Post post = this.postRepository.findByIdWithComments(postId);
+		if (post == null) {
+			throw new PostNotFoundException("Cannot find post with id: " + postId);
+		}
 		return PostMapper.toPostResponse(post);
 	}
 }

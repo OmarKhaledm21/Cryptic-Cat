@@ -10,9 +10,9 @@ public interface PostService {
 
 	Post createPost(CreatePostRequest createPostRequest);
 
-	PostResponse getPost(Long postId);
-
 	List<PostResponse> getUserPosts(Long userId);
+
+	PostResponse getPostWithComments(Long postId);
 
 	void deletePost(Long postId);
 
